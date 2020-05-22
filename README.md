@@ -20,6 +20,7 @@
 - Start ansible: `ansible.bat` and test with provided playbook (nodejs hello world):
   ```
   cd node-hello
+  ansible all -m ping -i hosts
   ansible-playbook -i hosts main.yml
   ```
 - The included debian server is accessible through SSH on port 2222
