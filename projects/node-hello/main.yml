@@ -1,0 +1,46 @@
+- hosts: all
+  remote_user: root
+  vars:
+    app_path: /apps/hello-world
+  tasks:
+    - name: Install git
+      apt:
+        name: git
+
+    - name: Download project
+      git:
+        repo: "https://github.com/johnpapa/node-hello.git"
+        dest: "{{app_path}}"
+        force: yes
+
+    - name: Install NodeJS
+      include_role:
+        name: geerlingguy.nodejs
+
+    - name: Install project dependencies
+      command: npm install
+      args:
+        chdir: "{{app_path}}"
+
+    # Install Forever tool.
+    # This tool is used to run the Node server in background
+    # and keep tracking of the running process
+    - name: Install Forever
+      npm: name=forever global=yes state=present
+
+    # This is an auxiliary task, used to identify if our Node service
+    # is already running (avoids restarting the service on each playbook
+    # execution)
+    - name: Get Forever's list of running processes
+      command: forever list
+      register: forever_list
+      changed_when: false
+
+    # Start the node server using "Foverer"
+    # The `when` clause identifies if the server is already
+    # running. If so, this task is skipped
+    - name: Start service
+      command: forever start index.js
+      when: "forever_list.stdout.find(app_path + '/index.js') == -1"
+      args:
+        chdir: "{{app_path}}"

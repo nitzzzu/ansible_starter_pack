@@ -1,0 +1,1 @@
+docker run --rm -it --network web -v %cd%/projects:/ansible -v %USERPROFILE%/.ssh:/tmp/.ssh:ro ansible bash
