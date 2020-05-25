@@ -1,10 +1,11 @@
 # Ansible starter pack
 
+- Latest ansible version
 - Windows friendly
 - SSH key authentication ready
 - Customizable
 - mitogen enabled
-- Small docker image size
+- Packed with the following roles: geerlingguy.docker, geerlingguy.docker_arm, geerlingguy.nodejs, azure.azcollection
 
 ## Install
 
