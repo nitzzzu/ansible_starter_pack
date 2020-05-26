@@ -4,7 +4,6 @@
 - Windows friendly
 - SSH key authentication ready
 - Customizable
-- mitogen enabled
 - Packed with the following roles: geerlingguy.docker, geerlingguy.docker_arm, geerlingguy.nodejs, azure.azcollection
 
 ## Install
