@@ -13,7 +13,16 @@
 - Create docker network `web`: `docker network create web`
 - Build `ansible` docker image: `docker/ansible/build_image.bat` (Adjust `ansible-galaxy` packages and `ansible.cfg` if needed)
 - _(Optional)_ Build `debian_server` docker image: run `docker/debian_server/build_image.bat`
-- Make `ansible` and `ansible-playbook` available system wide by adding ansible starter folder to PATH
+- Make ansible scripts available system wide by adding ansible starter folder to PATH:
+
+```
+ans = ansible
+ansb = ansible bash
+ansd = ansible decrypt
+anse = ansible encrypt
+ansp = ansible playbook
+ansv = ansible vault
+```
 
 ## Use
 
@@ -26,8 +35,8 @@ ANSIBLE_VAULT_PASSWORD=[your password here]
 - Test with provided playbook (nodejs hello world):
   ```
   cd node-hello
-  ansible all -m ping -i hosts
-  ansible-playbook -i hosts main.yml
+  ans all -m ping -i hosts
+  ansp -i hosts main.yml
   ```
 - The included debian server is accessible through SSH on port 2222
 - After running the test playbook check: localhost:3000

@@ -1,0 +1,1 @@
+ansv encrypt group_vars/all/vault
