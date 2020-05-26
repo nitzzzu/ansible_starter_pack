@@ -17,6 +17,11 @@
 
 ## Use
 
+- Any environment variables can be passed by creating an .env file near your playbooks 
+- If you are using Ansible vault you can pass the password as environment variable
+```
+ANSIBLE_VAULT_PASSWORD=[your password here]
+```
 - Start debian docker image: `debian-up.bat`
 - Test with provided playbook (nodejs hello world):
   ```
