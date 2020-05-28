@@ -2,7 +2,7 @@ FROM debian:buster-slim
 
 ADD https://raw.githubusercontent.com/ansible-collections/azure/dev/requirements-azure.txt /tmp/requirements-azure.txt
 
-RUN apt-get update && apt-get -y upgrade && apt-get install --no-install-recommends -y python3 python3-pip python3-setuptools dos2unix openssh-client wget && \
+RUN apt-get update && apt-get -y upgrade && apt-get install --no-install-recommends -y python3 python3-pip python3-setuptools dos2unix openssh-client wget sshpass && \
 	pip3 install --no-cache --upgrade wheel ansible mitogen && \
 	pip3 install -r /tmp/requirements-azure.txt  && \
 	apt-get --purge remove -y python3-pip python3-setuptools && rm -rf /var/lib/apt/lists/*

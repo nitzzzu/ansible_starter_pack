@@ -1,4 +1,4 @@
 @echo off
-docker rm debian_server1 --force 
-docker run --rm -d --name debian_server1 --privileged -p 2222:22 -p 3000:3000 --network web -v %USERPROFILE%/.ssh:/tmp/.ssh:ro debian_server
-pause
+docker rm debian_server1 --force
+docker run --rm -d --name debian_server1 -p 22:22 -p 15672:15672 --network web --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro debian_server
+docker exec -it debian_server1 systemctl start sshd
