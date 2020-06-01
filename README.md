@@ -34,7 +34,7 @@ ANSIBLE_VAULT_PASSWORD=[your password here]
 - Start debian docker image: `debian-up.bat`
 - Test with provided playbook (nodejs hello world):
   ```
-  cd node-hello
+  cd playbooks\node-hello
   ans all -m ping -i hosts
   ansp -i hosts main.yml
   ```

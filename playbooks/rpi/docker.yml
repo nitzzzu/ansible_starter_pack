@@ -1,0 +1,35 @@
+- hosts: all
+  become: yes
+  remote_user: pi
+
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+
+  tasks:
+    - name: "Copy files"
+      copy:
+        src: ./
+        dest: /home/pi/
+
+    - include_role:
+        name: docker_install
+
+    - name: Build Docker image from Dockerfile
+      docker_image:
+        name: web
+        build:
+          pull: no
+          path: /home/pi/docker_apps/nginx
+        source: build
+        state: present
+
+    - name: Running the container
+      docker_container:
+        image: web
+        name: web
+        restart: yes
+        restart_policy: always
+        state: started
+        #pull: yes
+        ports:
+          - "80:80"

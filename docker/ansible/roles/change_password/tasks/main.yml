@@ -1,0 +1,10 @@
+- name: Generate hash password
+  delegate_to: localhost
+  command: python3 -c "from passlib.hash import md5_crypt; import getpass; print (md5_crypt.hash('{{new_password}}'))"
+  register: hash
+  
+- name: Update password
+  user:
+    name: "{{user}}"
+    password: "{{hash.stdout}}"
+  become: yes

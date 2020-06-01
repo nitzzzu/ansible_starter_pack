@@ -1,0 +1,24 @@
+- name: Install docker/docker-compose package
+  pip:
+    name:
+      - docker
+      - docker-compose
+    executable: pip3
+
+- set_fact:
+    raspberry: "{{True if (ansible_lsb.id == 'Raspbian') else False}}"
+
+- include_role:
+    name: geerlingguy.docker
+  when: raspberry | bool == False
+
+- include_role:
+    name: geerlingguy.docker_arm
+  vars:
+    docker_users:
+      - pi
+  when: raspberry | bool == True
+
+- name: Create default docker network
+  docker_network:
+    name: web

@@ -1,0 +1,54 @@
+# https://github.com/giuaig/ansible-raspi-config/blob/master/raspi-config.yml
+- hosts: all
+  become: yes
+
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    #hostname: "raspberrypi"
+    #locale: "en_US.UTF-8"
+    #timezone: "Europe/Bucharest"
+    #keyboard: "us"
+
+  tasks:
+    - name: Get hostname
+      shell: "raspi-config nonint get_hostname"
+      register: current_hostname
+      changed_when: False
+      when: hostname is defined
+
+    - name: Change hostname
+      shell: "raspi-config nonint do_hostname {{ hostname }}"
+      when:
+        - hostname is defined
+        - current_hostname.stdout != hostname
+
+    - name: Change locale
+      shell: "raspi-config nonint do_change_locale {{ locale }}"
+      when: locale is defined
+
+    - name: Change timezone
+      shell: "raspi-config nonint do_change_timezone {{ timezone }}"
+      when: timezone is defined
+
+    - name: Change keyboard layout
+      shell: "raspi-config nonint do_configure_keyboard {{ keyboard }}"
+      when: keyboard is defined
+
+    - include_role:
+        name: change_password
+      vars:
+        user: pi
+        new_password: "{{ password }}"
+      when: password is defined
+
+    - include_role:
+        name: ssh_config
+      vars:
+        user: pi
+
+    - include_role:
+        name: system_requirements
+
+    - include_role:
+        name: reboot
+      

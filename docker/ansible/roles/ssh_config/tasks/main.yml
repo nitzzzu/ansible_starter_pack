@@ -1,0 +1,38 @@
+- name: Set authorized key
+  authorized_key:
+    user: "{{ user | default('root') }}"
+    key: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
+
+- name: Disable remote root login
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#?PermitRootLogin"
+    line: "PermitRootLogin no"
+  when:
+    - disable_root_login is defined
+    - disable_root_login | bool == True
+  notify: restart ssh
+
+- name: Disable password login
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#?PasswordAuthentication"
+    line: "PasswordAuthentication no"
+  when:
+    - disable_password_login is defined
+    - disable_password_login | bool == True
+  notify: restart ssh
+  
+  # - name: Add primary user
+  #   user:
+  #     name: "{{ primary_user }}"
+  #     system: yes
+  #     state: present
+  #     shell: /bin/bash
+  #     home: "/home/{{ primary_user }}"
+  # - name: Allow primary user to have passwordless sudo
+  #   lineinfile:
+  #     dest: /etc/sudoers
+  #     state: present
+  #     regexp: "'^{{ primary_user }}'"
+  #     line: "{{ primary_user }} ALL=(ALL) NOPASSWD: ALL"

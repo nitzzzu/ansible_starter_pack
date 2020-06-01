@@ -1,0 +1,27 @@
+- stat:
+      path: '{{project_src}}'
+  register: st
+
+- name: Stop services
+  docker_compose:
+      project_src: '{{project_src}}'
+      state: absent
+  when: st.stat.exists and st.stat.isdir
+
+- name: Get updated files from git repository
+  git:
+      repo: "{{ (github_pass is defined) | ternary('https://'~github_user~':'~github_pass~'@github.com/'~github_user~'/'~github_repo~'.git', 'https://github.com/'~github_user~'/'~github_repo~'.git') }}"
+      dest: '{{git_dest}}'
+
+- name: Remove git credentials
+  git_config:
+      name: remote.origin.url
+      value: https://github.com/{{github_user}}/{{github_repo}}.git
+      scope: local
+      repo: '{{git_dest}}'
+  when: github_pass is defined
+
+- name: Start services
+  docker_compose:
+      project_src: '{{project_src}}'
+      build: yes
