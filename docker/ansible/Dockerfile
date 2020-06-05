@@ -8,7 +8,9 @@ RUN apt-get update && apt-get -y upgrade && apt-get install --no-install-recomme
 	apt-get --purge remove -y python3-pip python3-setuptools && rm -rf /var/lib/apt/lists/*
 
 RUN ansible-galaxy install geerlingguy.docker geerlingguy.docker_arm geerlingguy.nodejs && \
-	ansible-galaxy collection install azure.azcollection --force
+	ansible-galaxy collection install azure.azcollection --force && \
+	ansible-galaxy install elastic.elasticsearch,7.7.1 && \
+	ansible-galaxy install geerlingguy.java
 
 COPY ansible.cfg /etc/ansible/ansible.cfg
 COPY roles /etc/ansible/roles
