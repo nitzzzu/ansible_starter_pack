@@ -1,0 +1,9 @@
+- name: Container cleanup
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Remove python
+      raw: apt-get purge -y python-minimal && apt-get autoremove -y
+
+    - name: Remove apt lists
+      raw: rm -rf /var/lib/apt/lists/*

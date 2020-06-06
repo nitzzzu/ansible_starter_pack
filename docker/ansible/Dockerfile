@@ -1,11 +1,23 @@
 FROM debian:buster-slim
 
+ARG PACKER_VERSION="1.5.6"
+#ARG TERRAFORM_VERSION="0.12.26"
+
 ADD https://raw.githubusercontent.com/ansible-collections/azure/dev/requirements-azure.txt /tmp/requirements-azure.txt
 
-RUN apt-get update && apt-get -y upgrade && apt-get install --no-install-recommends -y python3 python3-pip python3-setuptools dos2unix openssh-client wget sshpass && \
+RUN apt-get update && apt-get -y upgrade && apt-get install --no-install-recommends -y python3 python3-pip python3-setuptools dos2unix openssh-client wget sshpass unzip gnupg2 && \
 	pip3 install --no-cache --upgrade wheel ansible mitogen passlib && \
-	pip3 install -r /tmp/requirements-azure.txt  && \
-	apt-get --purge remove -y python3-pip python3-setuptools && rm -rf /var/lib/apt/lists/*
+	pip3 install -r /tmp/requirements-azure.txt && \
+	#wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+	wget -q https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
+	unzip '*.zip' -d /usr/local/bin && \
+	#wget -q -O "/usr/local/bin/jq" "https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64" && chmod +x /usr/local/bin/jq && \
+	wget -q -O - https://download.docker.com/linux/debian/gpg > /tmp/dkey && apt-key add /tmp/dkey && \
+	echo "deb [arch=amd64] https://download.docker.com/linux/debian buster stable" > /etc/apt/sources.list && \
+	apt-get update && \
+	apt-get -y install --no-install-recommends docker-ce-cli && \
+	apt-get --purge remove -y python3-pip python3-setuptools gnupg2 && \
+	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* *.zip
 
 RUN ansible-galaxy install geerlingguy.docker geerlingguy.docker_arm geerlingguy.nodejs && \
 	ansible-galaxy collection install azure.azcollection --force && \
@@ -24,7 +36,6 @@ RUN dos2unix /bin/docker-entrypoint.sh && chmod +x /bin/docker-entrypoint.sh
 RUN wget -O /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.2/dumb-init_1.2.2_amd64
 RUN chmod +x /usr/local/bin/dumb-init
 
-RUN mkdir -p /ansible
-WORKDIR /ansible
+WORKDIR /opt
 
 ENTRYPOINT ["/usr/local/bin/dumb-init", "--", "/bin/docker-entrypoint.sh"]
