@@ -6,7 +6,7 @@ ARG PACKER_VERSION="1.5.6"
 ADD https://raw.githubusercontent.com/ansible-collections/azure/dev/requirements-azure.txt /tmp/requirements-azure.txt
 
 RUN apt-get update && apt-get -y upgrade && apt-get install --no-install-recommends -y python3 python3-pip python3-setuptools dos2unix openssh-client wget sshpass unzip gnupg2 && \
-	pip3 install --no-cache --upgrade wheel ansible mitogen passlib && \
+	pip3 install --no-cache --upgrade wheel ansible mitogen passlib pywinrm && \
 	pip3 install -r /tmp/requirements-azure.txt && \
 	#wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
 	wget -q https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
