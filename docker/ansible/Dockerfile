@@ -5,7 +5,7 @@ ARG PACKER_VERSION="1.5.6"
 
 ADD https://raw.githubusercontent.com/ansible-collections/azure/dev/requirements-azure.txt /tmp/requirements-azure.txt
 
-RUN apt-get update && apt-get -y upgrade && apt-get install --no-install-recommends -y python3 python3-pip python3-setuptools dos2unix openssh-client wget sshpass unzip gnupg2 && \
+RUN apt-get update && apt-get -y upgrade && apt-get install --no-install-recommends -y python3 python3-apt python3-pip python3-setuptools dos2unix openssh-client wget sshpass unzip gnupg2 && \
 	pip3 install --no-cache --upgrade wheel ansible mitogen passlib pywinrm && \
 	pip3 install -r /tmp/requirements-azure.txt && \
 	#wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
@@ -16,7 +16,7 @@ RUN apt-get update && apt-get -y upgrade && apt-get install --no-install-recomme
 	echo "deb [arch=amd64] https://download.docker.com/linux/debian buster stable" > /etc/apt/sources.list && \
 	apt-get update && \
 	apt-get -y install --no-install-recommends docker-ce-cli && \
-	apt-get --purge remove -y python3-pip python3-setuptools gnupg2 && \
+	apt-get --purge remove -y python3-setuptools gnupg2 && \
 	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* *.zip
 
 RUN ansible-galaxy install geerlingguy.docker geerlingguy.docker_arm geerlingguy.nodejs && \
