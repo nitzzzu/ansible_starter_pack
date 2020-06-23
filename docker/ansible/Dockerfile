@@ -16,6 +16,10 @@ RUN apt-get update && apt-get -y upgrade && apt-get install --no-install-recomme
 	echo "deb [arch=amd64] https://download.docker.com/linux/debian buster stable" > /etc/apt/sources.list && \
 	apt-get update && \
 	apt-get -y install --no-install-recommends docker-ce-cli && \
+	wget -q -O - https://packages.microsoft.com/keys/microsoft.asc > /tmp/akey && apt-key add /tmp/akey && \
+	echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ buster main" > /etc/apt/sources.list && \
+	apt-get update && \
+	apt-get -y install --no-install-recommends azure-cli && \
 	apt-get --purge remove -y python3-setuptools gnupg2 && \
 	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* *.zip
 
@@ -36,6 +40,6 @@ RUN dos2unix /bin/docker-entrypoint.sh && chmod +x /bin/docker-entrypoint.sh
 RUN wget -O /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.2/dumb-init_1.2.2_amd64
 RUN chmod +x /usr/local/bin/dumb-init
 
-WORKDIR /opt
+WORKDIR /ansible
 
 ENTRYPOINT ["/usr/local/bin/dumb-init", "--", "/bin/docker-entrypoint.sh"]
