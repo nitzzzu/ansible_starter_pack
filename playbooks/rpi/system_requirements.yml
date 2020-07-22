@@ -5,6 +5,16 @@
       - python3-pip
       - python3-gpiozero
       - git
+      - tmux
+      - curl
+      - zsh
+      - mc
+      - screen
     update_cache: yes
     #upgrade: dist
     install_recommends: no
+
+- name: Uninstall the massive wolfram-alpha engine
+  apt:
+    name: ["wolfram-engine"]
+    state: absent

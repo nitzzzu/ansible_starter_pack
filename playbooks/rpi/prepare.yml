@@ -5,9 +5,9 @@
   vars:
     ansible_python_interpreter: /usr/bin/python3
     #hostname: "raspberrypi"
-    #locale: "en_US.UTF-8"
-    #timezone: "Europe/Bucharest"
-    #keyboard: "us"
+    locale: "en_US.UTF-8"
+    timezone: "Europe/Bucharest"
+    keyboard: "us"
 
   tasks:
     - name: Get hostname
@@ -46,8 +46,7 @@
       vars:
         user: pi
 
-    - include_role:
-        name: system_requirements
+    - include_tasks: system_requirements.yml
 
     - include_role:
         name: reboot

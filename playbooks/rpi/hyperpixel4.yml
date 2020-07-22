@@ -1,0 +1,17 @@
+- hosts: all
+  become: yes
+
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    
+  tasks:
+    - git:
+        repo: https://github.com/pimoroni/hyperpixel4
+        dest: /home/pi/hyperpixel
+        version: pi3
+
+    - shell: /home/pi/hyperpixel/install.sh
+    - shell: hyperpixel4-rotate right
+
+    - include_role:
+        name: reboot

@@ -1,0 +1,44 @@
+# https://stearz.net/blog/2019/07/05/lets-build-a-raspberry-pi-dashboard-part-2/
+- hosts: all
+  become: yes
+
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    pi_user_name: pi
+    pi_user_group: pi
+    chromium_url: https://www.youtube.com
+  tasks:
+    # - name: change wallpaper
+    #   template: src=files/desktop-items-0.conf dest=/home/pi/.config/pcmanfm/LXDE-pi/desktop-items-0.conf group=pi owner=pi force=yes
+
+    # - name: restart pcmanfm
+    #   shell: killall -9 pcmanfm
+
+    - name: "Install packages"
+      apt:
+        name: ["unclutter"]
+
+    - name: "Create X default config directory"
+      file:
+        path: "/home/{{ pi_user_name }}/.config/lxsession/LXDE-pi"
+        state: directory
+        recurse: yes
+
+    - name: "Create LXDE autostart configuration"
+      template:
+        src: "templates/autostart.j2"
+        dest: "/home/{{ pi_user_name }}/.config/lxsession/LXDE-pi/autostart"
+
+    - name: "Create kiosk script"
+      template:
+        src: "templates/kiosk.j2"
+        dest: "/home/{{ pi_user_name }}/kiosk.sh"
+        owner: "{{ pi_user_name }}"
+        group: "{{ pi_user_group }}"
+        mode: 0755
+
+    - command: shutdown -r now
+      async: 0
+      poll: 0
+      ignore_errors: true
+

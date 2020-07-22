@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM ubuntu:20.04
 
 ARG PACKER_VERSION="1.5.6"
 #ARG TERRAFORM_VERSION="0.12.26"
