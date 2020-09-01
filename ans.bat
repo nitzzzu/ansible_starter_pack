@@ -1,2 +1,6 @@
 @echo off
-docker run --rm -it --network web -v %cd%:/ansible -v %USERPROFILE%/.ssh:/tmp/.ssh:ro ansible ansible %*
+if exist .env (
+    docker run --rm -it --network web --env-file .env -v %cd%:/ansible -v %USERPROFILE%/.ssh:/tmp/.ssh:ro ansible ansible %*
+) else (
+    docker run --rm -it --network web -v %cd%:/ansible -v %USERPROFILE%/.ssh:/tmp/.ssh:ro ansible %*
+)
